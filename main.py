@@ -1,6 +1,6 @@
 # main.py
-# Run THIS file. Pybricks will automatically bundle robot.py, mission_1.py,
-# mission_2.py, and mission_3.py along with it since they're imported below.
+# Run THIS file. Pybricks will automatically bundle robot.py, mission_*.py
+#  along with it since they're imported below.
 #
 # LEFT / RIGHT  -> change selected mission number (wraps around)
 # CENTER        -> run the selected mission
@@ -10,7 +10,7 @@ from robot import hub
 from pybricks.parameters import Button, Color
 from pybricks.tools import wait
 
-import mission_1
+import mission_1 
 import mission_2
 import mission_3
 import mission_4

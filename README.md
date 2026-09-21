@@ -37,8 +37,7 @@ to match your robot's build:
 
 ## Usage
 
-1. Open this project in the Pybricks IDE (or VS Code with the Pybricks
-   extension) and connect to the SPIKE Prime hub.
+1. Open this project in the Pybricks IDE and connect to the SPIKE Prime hub.
 2. Run `main.py` - it will automatically bundle `robot.py` and all
    `mission_*.py` files.
 3. Use LEFT/RIGHT to select a mission number, CENTER to run it.

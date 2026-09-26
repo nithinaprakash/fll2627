@@ -46,6 +46,7 @@ while True:
     elif Button.CENTER in just_pressed:
         print(" center button\n")
         hub.light.on(Color.GREEN)       # "running" cue
+        wait(250)
         missions[selected].run()
         show_slot()                      # back to idle + redraw number
 

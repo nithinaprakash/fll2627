@@ -18,11 +18,15 @@ import mission_6
 import mission_7
 import mission_8
 import mission_9
+import mission_10
 '''
 import run_1
+import run_2
+import run_3
+import run_4
 hub.system.set_stop_button(Button.BLUETOOTH)
 #missions = [mission_1, mission_2, mission_3, mission_4, mission_5, mission_6, mission_7, mission_8, mission_9]
-missions = [run_1]
+missions = [run_1, run_2, run_3, run_4]
 selected = 0
 prev_pressed = set()
 

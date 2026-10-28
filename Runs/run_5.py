@@ -3,71 +3,61 @@ from pybricks.parameters import Button, Color, Direction, Port, Side, Stop
 from pybricks.robotics import DriveBase
 from pybricks.tools import wait, StopWatch
 # Our own robot setup (wheels, arms, speed) lives in robot.py
-from robot import drive_base, left_arm, right_arm, set_speed
+from robot import drive_base, left_arm, right_arm, set_speed, lift
 from pybricks.parameters import Stop
 
 def run():  
     hub = PrimeHub()
     drive_base.use_gyro(True)
     drive_base.reset()
-
+    left_arm.run_until_stalled(-200, then=Stop.COAST, duty_limit=40)
+    right_arm.run_until_stalled(200, then=Stop.COAST, duty_limit=40)
+    left_arm.reset_angle(0)
+    right_arm.reset_angle(0)
     ## test
     set_speed(turn_rate=90, speed=250)
     drive_base.turn(45)
     drive_base.straight(370)
 
-    left_arm.run_angle(500, 90, wait=False) #Lift up the seed
-    wait(150)
-    drive_base.straight(-10)
-    left_arm.run_angle(100,50)
-    drive_base.straight(-100)
-    drive_base.turn(-62.5)
-    right_arm.run_angle(100,-260,wait=False)
-    drive_base.straight(585)
-    drive_base.turn(19)
-    right_arm.run_angle(700,250)
-     # Done collecting seed
+    start = left_arm.angle()
+    d0 = drive_base.distance()
+    print("1 start")
+    left_arm.run_angle(500, 186, then=Stop.COAST,wait=False)
+    drive_base.straight(-5)
+    print("2 backed", drive_base.distance() - d0, "mm, arm at", left_arm.angle() - start)
 
+    left_arm.run_angle(300, 17, then=Stop.COAST)          # absolute: makes up any shortfall
+    print("3 arm at", left_arm.angle() - start)
+
+    d1 = drive_base.distance()
+    drive_base.straight(-25)
+    print("4 backed", drive_base.distance() - d1, "mm")
+    #wait(5000)
     '''
-    drive_base.turn(-86)
-    drive_base.straight(182.5)
-    drive_base.turn(90)
-    left_arm.run_angle(120, -230,wait=False) #270 drop the attachment 
-    drive_base.straight(450)
-    set_speed(turn_rate=100)
-    drive_base.turn(-45) # turn towards the tree
-    set_speed(speed=250)
-    drive_base.straight(35)
-    set_speed(speed=200)
-    drive_base.straight(24) # go closer to the tree, some more at lower speed At the tree
-    left_arm.run_angle(50,36,wait=False) #Lift up the seed
-    drive_base.straight(-10)
-    left_arm.run_angle(100,50)
-    drive_base.straight(-130) # Done collecting seed
-    # on to next mission 5, reaching roots,
-    drive_base.turn(-63)
-    drive_base.straight(595) # go to mission 5
-    right_arm.run_angle(100,-245) # drop the attachment
-    #wait(8000)
-    drive_base.turn(15)
-    right_arm.run_angle(600,260)
-    set_speed(speed=600,accel=600)
-    drive_base.straight(-800)
+    left_arm.run_angle(300, 36, wait=False) #Lift up the seed
+    #lift(left_arm,300, 90, wait=False, timeout=150)
+    wait(150)
+    drive_base.straight(-10,wait=False)
     '''
+    left_arm.run_angle(100,49)
+    drive_base.straight(-100)
+    # turning left toward root
+    drive_base.turn(-61) # 62.5
+    print("turning less")
+    right_arm.run_angle(100,-257,wait=False)
+    # go to root
+    drive_base.straight(605)
+    right_arm.stop()
+    wait(500)
+    drive_base.turn(22)
+    # flick the root
+    right_arm.run_angle(730,100)#flicking the root old speed 700
+    # not sure if left arm needs to go down. TBD
+    left_arm.run_angle(100,-100,wait=False)
+    set_speed(speed=300)
+    drive_base.straight(-740)
 
     drive_base.use_gyro(False)
     drive_base.stop()
     left_arm.stop()
     right_arm.stop()
-
-
-
-    ## test
-'''
-    set_speed(speed=800,accel=800)
-
-    drive_base.straight(815)
-    right_arm.run_angle(100,15,wait=True)
-    drive_base.turn(22)
-    set_speed(speed=800,turn_accel=800,turn_rate=800)
-    right_arm.run_angle(900,180,wait=False) #Lift up the seed'''

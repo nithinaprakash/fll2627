@@ -50,11 +50,12 @@ def run():
     right_arm.stop()
     wait(500)
     drive_base.turn(22)
-    # flick the root
+    # flick the root 250
+    print("flicking 125")
     right_arm.run_angle(730,100)#flicking the root old speed 700
     # not sure if left arm needs to go down. TBD
     left_arm.run_angle(100,-100,wait=False)
-    set_speed(speed=300)
+    set_speed(speed=800)
     drive_base.straight(-740)
 
     drive_base.use_gyro(False)

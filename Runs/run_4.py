@@ -8,6 +8,8 @@ from pybricks.parameters import Stop
 def run():  
     hub = PrimeHub()
     drive_base.use_gyro(True)
+    #left_arm.run_until_stalled(200, then=Stop.COAST, duty_limit=40)
+    #right_arm.run_until_stalled(200, then=Stop.COAST, duty_limit=40)
     set_speed(turn_rate=90, speed=350)  
     drive_base.turn(-86)
     set_speed(turn_rate=150)
@@ -19,7 +21,8 @@ def run():
     set_speed(speed=800,accel=800)
     drive_base.straight(90) # second
     set_speed(speed=200)
-    drive_base.straight(-172.5)
+    drive_base.straight(-372.5)
+    '''
     drive_base.turn(90)
     left_arm.run_angle(120, -230,wait=False) #270 drop the attachment 
     drive_base.straight(450)
@@ -42,7 +45,7 @@ def run():
     right_arm.run_angle(600,260)
     set_speed(speed=600,accel=600)
     drive_base.straight(-800)
-
+    '''
     drive_base.use_gyro(False)
     drive_base.stop()
     left_arm.stop()

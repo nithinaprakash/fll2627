@@ -25,19 +25,16 @@ import run_2
 import run_3
 import run_4
 import run_5
-Import run_6
-
+import run_6
 hub.system.set_stop_button(Button.BLUETOOTH)
 #missions = [mission_1, mission_2, mission_3, mission_4, mission_5, mission_6, mission_7, mission_8, mission_9]
 missions = [run_1, run_2, run_3, run_4, run_5, run_6]
 selected = 0
 prev_pressed = set()
 
-
 def show_slot():
     hub.display.number(selected + 1)
     hub.light.on(Color.WHITE)  # idle color
-
 
 show_slot()  # show "1" on startup
 
@@ -58,9 +55,9 @@ while True:
     elif Button.CENTER in just_pressed:
         print(" center button\n")
         hub.light.on(Color.GREEN)       # "running" cue
-        wait(250)
+        wait(100)
         missions[selected].run()
         show_slot()                      # back to idle + redraw number
-
+        
     prev_pressed = pressed
     wait(10)

@@ -39,7 +39,3 @@ def run():
 
     # begin cane mission
 
-    
-
-
-

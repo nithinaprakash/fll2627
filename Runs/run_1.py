@@ -12,7 +12,7 @@ def run():
     drive_base.use_gyro(True)
     #starting humongous fungus mission:
     set_speed(speed=250)
-    drive_base.straight(358)
+    drive_base.straight(345)#was 368
     set_speed(turn_rate=200,turn_accel=200, speed=400)
     drive_base.turn(90)    
     drive_base.straight(616)
@@ -27,10 +27,10 @@ def run():
     #starting window to the past
     drive_base.turn(210)
     set_speed(accel=600, speed=500, turn_rate=90)
-    drive_base.straight(70)
-    drive_base.turn(-20)
-    drive_base.turn(20)
-    drive_base.straight(-70)
+    drive_base.straight(77)
+    drive_base.turn(-25)
+    drive_base.turn(25)
+    drive_base.straight(-77)
 
     #starting leafcutter mission
     set_speed(turn_rate=165)
@@ -44,15 +44,15 @@ def run():
     #starting biocentric architecture
     drive_base.turn(-9.5)
     set_speed(speed=200, turn_rate=150)
-    drive_base.straight(520)
-    drive_base.turn(57)
-    set_speed(speed=250, accel=200)
-    drive_base.straight(55)
-    drive_base.straight(-30)
+    drive_base.straight(523)
+    drive_base.turn(56)
+    set_speed(speed=100, accel=100)
+    drive_base.straight(50)
+    drive_base.straight(-33)
     drive_base.turn(35)
     set_speed(speed=500, accel=500)    
     set_speed(speed=400, accel=400)
-    drive_base.straight(-700, Stop.COAST)
+    drive_base.straight(-750, Stop.COAST)
     drive_base.use_gyro(False)
     
     #drive_base.straight(200)
@@ -69,6 +69,3 @@ def run():
     #drive_base.straight(800)
     #drive_base.use_gyro(False)
     
-
-
-

@@ -6,10 +6,8 @@ of each loud sound, and prints the answer step by step so you can see how it wor
 
 To run it (in a terminal, in the folder with this file):
 
-    pip install numpy sounddevice pyusb
+    pip install numpy sounddevice pyusb libusb-package
     python coqui_demo.py
-
-On a Mac, the lights also need:   brew install libusb
 
 Press Ctrl+C to stop.
 """
@@ -20,7 +18,7 @@ import numpy as np
 # =============================================================================
 # 1. SETTINGS - the only part you should need to change
 # =============================================================================
-BOARD = "xvf3000"         # "xvf3000" (the older board) or "xvf3800" (the newer one)
+BOARD = "xvf3800"         # "xvf3000" (the older board) or "xvf3800" (the newer one)
 
 SPEED_OF_SOUND = 343.0    # metres per second, at about 20 °C
 SAMPLE_RATE = 16000       # the board records 16,000 samples every second
@@ -32,25 +30,30 @@ MIN_SOUND_DB = 55         # ...and at least this loud at the board
 MIN_AGREEMENT = 0.5       # how much the 6 mic pairs must agree (0 to 1)
 HOLD_SECONDS = 5          # keep each answer on screen this long before showing a new one
 
-# Lining up with the chalk circle (the clap test):
+# Lining up with the chalk circle (the clap test). Each board has its own numbers,
+# because each one sits in a different mount. Change only your board's numbers:
 #   1. Clap on the 0° chalk line. Put the "board angle" it prints into ZERO_DEGREES.
-#   2. Clap on the 90° chalk line. If it doesn't say about 90°, change CLOCKWISE.
-ZERO_DEGREES = 136
-CLOCKWISE = True
+#   2. Clap on the 90° chalk line. If it doesn't say about 90°, flip CLOCKWISE.
+ZERO_DEGREES_FOR = {"xvf3000": 136, "xvf3800": -136}
+CLOCKWISE_FOR = {"xvf3000": True, "xvf3800": True}
+
+ZERO_DEGREES = ZERO_DEGREES_FOR[BOARD]   # the numbers for the board chosen above
+CLOCKWISE = CLOCKWISE_FOR[BOARD]
 
 # Matching our dB numbers to a sound meter:
 #   Play a steady sound, hold the meter next to the board, and compare.
 #   If our number is 4 dB too low, add 4 to FULL_SCALE_DB (too high: subtract).
 FULL_SCALE_DB = 120
 
-# The ring of 12 lights on the XVF3000 (one light every 30°).
+# The ring of 12 lights on the board (one light every 30°). Each board has its own
+# settings, because the lights sit differently on each one.
 # Clap from different sides and watch which light turns red:
 #   - If the red light is a few lights away from you, change LED_SHIFT by that many
 #     (try +1 first; if it gets worse, go the other way).
 #   - If the light moves the opposite way to you as you walk around, flip LED_REVERSE.
 USE_LEDS = True
-LED_SHIFT = -5
-LED_REVERSE = True
+LED_SHIFT = {"xvf3000": -5, "xvf3800": 6}
+LED_REVERSE = {"xvf3000": True, "xvf3800": False}
 
 # Where each microphone sits, in metres from the centre of the board,
 # and which recording channel it is on. Mic letters A-D are just names.
@@ -184,54 +187,76 @@ def explain(board_angle, agreement, level, floor):
 
 
 # =============================================================================
-# 5. THE LIGHTS (XVF3000 only)
+# 5. THE LIGHTS
 # =============================================================================
 class Lights:
-    """Talks to the 12 lights over USB. If anything is missing, it just turns itself off."""
+    """Talks to the 12 lights over USB. If anything is missing, it just turns itself off.
+    The two boards understand different light commands, so each has its own way to send."""
+
+    USB_IDS = {"xvf3000": 0x0018, "xvf3800": 0x001A}   # product numbers (the maker is 0x2886)
 
     def __init__(self):
         self.dev = None
-        if not USE_LEDS or BOARD != "xvf3000":
+        if not USE_LEDS:
             return
         try:
-            import usb.core
-            self.dev = usb.core.find(idVendor=0x2886, idProduct=0x0018)   # the XVF3000's USB id
+            try:
+                import libusb_package          # brings its own copy of libusb (like Seeed's tool)
+                self.dev = libusb_package.find(idVendor=0x2886, idProduct=self.USB_IDS[BOARD])
+            except ImportError:
+                import usb.core                # otherwise use the Mac's libusb (brew install libusb)
+                self.dev = usb.core.find(idVendor=0x2886, idProduct=self.USB_IDS[BOARD])
         except Exception as e:
             print(f"Lights: off (could not load pyusb/libusb: {e})")
             return
         if self.dev is None:
-            print("Lights: off (could not find the board's light controller)")
+            print(f"Lights: off (could not find the {BOARD}'s light controller)")
             return
-        print("Lights: ready")
+        print(f"Lights: ready ({BOARD})")
 
-    def send(self, command, data):
+    def send(self, command, group, data):
+        """Send one light command. 0x40 means "a special command for this device"."""
         if self.dev is None:
             return
         try:
-            # 0x40 = "a special command for this device"; 0x1C = the light controller
-            self.dev.ctrl_transfer(0x40, 0, command, 0x1C, data, 8000)
+            self.dev.ctrl_transfer(0x40, 0, command, group, data, 8000)
         except Exception as e:
             print(f"\nLights: stopped working ({e})")
             self.dev = None
 
+    def show(self, colours):
+        """Set all 12 lights. colours is a list of 12 (red, green, blue) values, 0-255."""
+        if BOARD == "xvf3000":
+            data = []
+            for r, g, b in colours:
+                data += [r, g, b, 0]           # each light gets 4 numbers: red, green, blue, unused
+            self.send(6, 0x1C, data)           # command 6 = "show these colours"
+        else:
+            self.send(12, 20, [5])             # light mode 5 = "ring": each light its own colour
+            data = []
+            for r, g, b in colours:            # each light is one number 0xRRGGBB, sent as 4 bytes
+                data += list(((r << 16) | (g << 8) | b).to_bytes(4, "little"))
+            self.send(19, 20, data)            # command 19 = "ring colours"
+
     def point(self, board_angle, bright=True):
         """Light the one light facing the sound, with dim neighbours either side."""
         steps = round(board_angle / 30)
-        if LED_REVERSE:
+        if LED_REVERSE[BOARD]:
             steps = -steps
-        facing = (steps + LED_SHIFT) % 12
+        facing = (steps + LED_SHIFT[BOARD]) % 12
         main, side = ((160, 0, 0), (20, 0, 0)) if bright else ((25, 0, 0), (0, 0, 0))
         colours = [(0, 0, 0)] * 12
         colours[facing] = main
         colours[(facing - 1) % 12] = side
         colours[(facing + 1) % 12] = side
-        data = []
-        for r, g, b in colours:
-            data += [r, g, b, 0]       # each light gets 4 numbers: red, green, blue, unused
-        self.send(6, data)             # command 6 = "show these colours"
+        self.show(colours)
 
     def off(self):
-        self.send(1, [0, 0, 0, 0])     # command 1 = "make every light this one colour"
+        """Turn all the lights off (they come back to normal when the board is replugged)."""
+        if BOARD == "xvf3000":
+            self.send(1, 0x1C, [0, 0, 0, 0])   # command 1 = "make every light this one colour"
+        else:
+            self.send(12, 20, [0])             # light mode 0 = off
 
 
 # =============================================================================

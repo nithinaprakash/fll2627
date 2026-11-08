@@ -10,7 +10,7 @@ hub = PrimeHub()
 def run():
     drive_base.use_gyro(True)
     set_speed(speed=250)
-    drive_base.straight(358)
+    drive_base.straight(350)
     set_speed(turn_rate=200,turn_accel=200, speed=400)
     drive_base.turn(90)    
     drive_base.straight(670)
@@ -23,7 +23,7 @@ def run():
     right_arm.run_angle(250,180)
     drive_base.turn(-44.5)
     drive_base.straight(-90)
-    drive_base.turn(75)
+    drive_base.turn(70)
     drive_base.straight(-120)
 
     left_arm.run_angle(150,-200)
@@ -38,4 +38,8 @@ def run():
 
 
     # begin cane mission
+
+    
+
+
 

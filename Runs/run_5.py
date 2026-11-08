@@ -51,7 +51,7 @@ def run():
     drive_base.straight(620, then=Stop.BRAKE)
     right_arm.stop()
     wait(500)
-    drive_base.turn(19)
+    drive_base.turn(20)
     #wait(8000)
     # flick the root 250
     print("flicking 125")

@@ -1,3 +1,4 @@
+
 from pybricks.hubs import PrimeHub
 from robot import drive_base, left_arm, right_arm, set_speed
 from pybricks.parameters import Stop
@@ -7,34 +8,33 @@ from pybricks.tools import wait
 def run():
     hub = PrimeHub()
 
-    wait(200)
     drive_base.reset()
     drive_base.use_gyro(True)
     #starting humongous fungus mission:
     set_speed(speed=250)
-    drive_base.straight(345)#was 368
+    drive_base.straight(355)#was 368
     set_speed(turn_rate=200,turn_accel=200, speed=400)
     drive_base.turn(90)    
     drive_base.straight(616)
     set_speed(50)
-    drive_base.straight(90)
-    wait(200)
+    drive_base.straight(80)
+    wait(100)
 
     drive_base.turn(-10)
     set_speed(110)
-    drive_base.straight(-90)
+    drive_base.straight(-80)
 
     #starting window to the past
     drive_base.turn(210)
     set_speed(accel=600, speed=500, turn_rate=90)
-    drive_base.straight(77)
+    drive_base.straight(90)
     drive_base.turn(-25)
     drive_base.turn(25)
-    drive_base.straight(-77)
+    drive_base.straight(-90)
 
     #starting leafcutter mission
     set_speed(turn_rate=165)
-    drive_base.turn(65)
+    drive_base.turn(62) #was 65
     set_speed(200)
     drive_base.straight(260)
     drive_base.turn(-47)
@@ -42,10 +42,10 @@ def run():
     #wait(100)
     drive_base.straight(-300)    
     #starting biocentric architecture
-    drive_base.turn(-9.5)
+    drive_base.turn(-10.5)
     set_speed(speed=200, turn_rate=150)
-    drive_base.straight(523)
-    drive_base.turn(56)
+    drive_base.straight(523)#was 428
+    drive_base.turn(54)
     set_speed(speed=100, accel=100)
     drive_base.straight(50)
     drive_base.straight(-33)
@@ -69,3 +69,10 @@ def run():
     #drive_base.straight(800)
     #drive_base.use_gyro(False)
     
+
+
+ 
+    
+
+
+

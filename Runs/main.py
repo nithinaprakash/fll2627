@@ -1,4 +1,4 @@
-# main.py
+ # main.py
 # Run THIS file. Pybricks will automatically bundle robot.py, mission_1.py,
 # mission_2.py, and mission_3.py along with it since they're imported below.
 #
@@ -26,9 +26,10 @@ import run_3
 import run_4
 import run_5
 import run_6
+
 hub.system.set_stop_button(Button.BLUETOOTH)
 #missions = [mission_1, mission_2, mission_3, mission_4, mission_5, mission_6, mission_7, mission_8, mission_9]
-missions = [run_1, run_2, run_3, run_4, run_5, run_6]
+missions = [run_1, run_2, run_3, run_4, run_5, run_6,]
 selected = 0
 prev_pressed = set()
 
